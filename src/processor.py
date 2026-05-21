@@ -1,13 +1,19 @@
 import spacy
 import re
 
-# Cargamos el modelo pequeño en inglés que descargaste
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    raise OSError("El modelo 'en_core_web_sm' no está instalado. Ejecuta: python -m spacy download en_core_web_sm")
+def cargar_modelo_spacy(idioma="Español"):
+    try:
+        if idioma == "Español":
+            return spacy.load("es_core_news_sm")
+        else:
+            return spacy.load("en_core_web_sm")
+    except OSError as e:
+        raise OSError("El modelo requerido no está instalado. Ejecuta: python -m spacy download es_core_news_sm") from e
 
-def clean_and_lemmatize(text):
+# Cargamos el modelo por defecto (Español)
+nlp = cargar_modelo_spacy()
+
+def clean_and_lemmatize(text):  
     """
     Limpia el texto: elimina caracteres especiales, pasa a minúsculas,
     remueve stopwords y convierte cada palabra a su lema (raíz).

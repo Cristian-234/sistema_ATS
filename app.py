@@ -2,11 +2,15 @@ import streamlit as st
 import pandas as pd
 import tempfile
 import os
+import streamlit as st
 
 # Importamos las funciones que programamos en los pasos anteriores
 from src.extractor import extract_text_from_pdf
 from src.processor import clean_and_lemmatize
 from src.comparator import calculate_similarity
+from src.processor import cargar_modelo_spacy
+
+
 
 # Configuración de la página en el navegador
 st.set_page_config(
@@ -14,6 +18,18 @@ st.set_page_config(
     page_icon="💼", 
     layout="wide"
 )
+
+# 1. Crear el selector en la barra lateral
+st.sidebar.title("Configuración Global")
+idioma_seleccionado = st.sidebar.selectbox(
+    "Selecciona el idioma del Dataset/CVs:",
+    ["Español", "Inglés"]
+)
+
+# 2. Cargar el modelo correspondiente dinámicamente
+nlp = cargar_modelo_spacy(idioma_seleccionado)
+
+st.sidebar.success(f"Modelo cargado: {idioma_seleccionado}")
 
 # Encabezado principal de la aplicación
 st.title("💼 Sistema ATS Inteligente: Clasificación de Currículums")
