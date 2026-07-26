@@ -90,6 +90,7 @@ DOMAIN_EXAMPLES = {
 def inject_css():
     st.markdown(
         """
+    
         <style>
         .main .block-container {
             padding-top: 2rem;
@@ -123,7 +124,6 @@ def inject_css():
         [data-testid="stSidebar"] input {
             color: #f8fafc !important;
         }
-
         [data-testid="stSidebar"] svg {
             color: #f8fafc !important;
             fill: #f8fafc !important;
