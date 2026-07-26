@@ -1,38 +1,48 @@
-import pdfplumber
 import os
+
+import pdfplumber
+
 
 def extract_text_from_pdf(pdf_path):
     """
-    Abre un archivo PDF y extrae todo su contenido de texto de forma secuencial.
+    Extracts text from a digital PDF while preserving line breaks.
+    Preserving lines helps downstream section detection.
     """
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"El archivo no existe en la ruta: {pdf_path}")
-        
-    full_text = []
-    
-    # Abrimos el PDF de manera segura usando un manejador de contexto (with)
+
+    pages_text = []
+
     with pdfplumber.open(pdf_path) as pdf:
-        for i, page in enumerate(pdf.pages):
+        for page_number, page in enumerate(pdf.pages, start=1):
             text = page.extract_text()
-            if text:  # Si la página no está vacía (o no es solo una imagen)
-                full_text.append(text)
+            if text:
+                pages_text.append(_normalize_lines(text))
             else:
-                print(f"[Advertencia] La página {i+1} de {pdf_path} no contiene texto extraíble.")
-                
-    # Unimos todas las páginas con un salto de línea y limpiamos espacios extra
-    cleaned_text = "\n".join(full_text)
-    return " ".join(cleaned_text.split())
+                print(
+                    f"[Advertencia] La pagina {page_number} de {pdf_path} "
+                    "no contiene texto extraible."
+                )
+
+    return "\n".join(pages_text).strip()
+
+
+def _normalize_lines(text):
+    lines = []
+    for line in text.splitlines():
+        cleaned_line = " ".join(line.split())
+        if cleaned_line:
+            lines.append(cleaned_line)
+    return "\n".join(lines)
+
 
 if __name__ == "__main__":
-    # Script de prueba rápida (Sanity Check)
-    # Pon un PDF de prueba en tu carpeta data/resumes/ y escribe su nombre aquí para probarlo
-    test_pdf = "data/resumes/prueba.pdf"
-    
+    test_pdf = "sample_accountant_cv_clear_sections.pdf"
+
     if os.path.exists(test_pdf):
-        print("--- Probando Extractor de PDF ---")
-        texto_extraido = extract_text_from_pdf(test_pdf)
-        print(f"Caracteres extraídos: {len(texto_extraido)}")
-        print("\nPrimeros 300 caracteres del texto:")
-        print(texto_extraido[:300] + "...")
+        extracted_text = extract_text_from_pdf(test_pdf)
+        print("--- Probando extractor de PDF ---")
+        print(f"Caracteres extraidos: {len(extracted_text)}")
+        print(extracted_text[:500] + "...")
     else:
-        print(f"Coloca un PDF de prueba en '{test_pdf}' para ejecutar el test automático.")
+        print(f"Coloca un PDF de prueba en '{test_pdf}' para ejecutar el test.")
