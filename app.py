@@ -110,6 +110,25 @@ def inject_css():
             font-weight: 650;
         }
 
+        [data-testid="stSidebar"] div[data-baseweb="select"] > div {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        [data-testid="stSidebar"] div[data-baseweb="select"] span {
+            color: #f8fafc !important;
+        }
+
+        [data-testid="stSidebar"] input {
+            color: #f8fafc !important;
+        }
+
+        [data-testid="stSidebar"] svg {
+            color: #f8fafc !important;
+            fill: #f8fafc !important;
+        }
+
         .ats-hero {
             padding: 28px 30px;
             border-radius: 14px;
